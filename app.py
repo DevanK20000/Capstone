@@ -7,12 +7,16 @@ import pickle
 import requests
 import json
 import os
+import re
 
 classes = pickle.load(open('labels.pkl', 'rb'))
 
 # get value from enviroment variable
 tenorflow_url = os.environ.get(
     'TENSORFLOW_URL', 'http://localhost:8501/v1/models/multilable_model:predict')
+
+predict_threshold = os.environ.get(
+    'pred_threshold', 0.3)
 
 
 # Get responce from tensorflow model server
@@ -55,11 +59,22 @@ def get_text_from_dict(dict):
         text += key + ", "
     return text
 
+# function to clean the word of any punctuation or special characters and lowwer it
+
+
+def cleanPunc(sentence):
+    cleaned = re.sub(r'[?|!|\'|"|#]', r'', sentence)
+    cleaned = re.sub(r'[.|,|)|(|\|/]', r' ', cleaned)
+    cleaned = cleaned.strip()
+    cleaned = cleaned.replace("\n", " ")
+    cleaned = cleaned.lower()
+    return cleaned
+
 
 def chatbot_response(msg):
     pred = get_responce_from_model_server(msg)
     pred = get_prediction_dict(pred)
-    pred = filter_predictions(pred, 0.5)
+    pred = filter_predictions(pred, predict_threshold)
     pred = get_text_from_dict(pred)
     return pred
 
