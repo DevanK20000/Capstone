@@ -16,9 +16,9 @@ tenorflow_url = os.environ.get(
     'TENSORFLOW_URL', 'http://localhost:8501/v1/models/multilable_model:predict')
 
 predict_threshold = os.environ.get(
-    'pred_threshold', 0.3)
+    'pred_threshold', "0.3")
 
-
+predict_threshold = float(predict_threshold)
 # Get responce from tensorflow model server
 
 
@@ -72,6 +72,7 @@ def cleanPunc(sentence):
 
 
 def chatbot_response(msg):
+    msg = cleanPunc(msg)
     pred = get_responce_from_model_server(msg)
     pred = get_prediction_dict(pred)
     pred = filter_predictions(pred, predict_threshold)
