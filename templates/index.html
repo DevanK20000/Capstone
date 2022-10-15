@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Chatbot</title>
+    <title>Mult-lable Movie Summary</title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
@@ -14,88 +14,107 @@
   </head>
 
   <body>
-    <!-- partial:index.partial.html -->
-    <section class="msger">
-      <header class="msger-header">
-        <div class="msger-header-title">
-          <i class="fas fa-bug"></i> Chatbot <i class="fas fa-bug"></i>
-        </div>
-      </header>
-
-      <main class="msger-chat">
-        <div class="msg left-msg">
-          <div
-            class="msg-img"
-            style="
-              background-image: url(https://image.flaticon.com/icons/svg/327/327779.svg);
-            "
-          ></div>
-
-          <div class="msg-bubble">
-            <div class="msg-info">
-              <div class="msg-info-name">Chatbot</div>
-              <div class="msg-info-time">12:45</div>
-            </div>
-
-            <div class="msg-text">
-              Hi, welcome to ChatBot! Go ahead and send me a message. 😄
-            </div>
+    <div id="container">
+      <main>
+        <header>
+          <img
+            src="https://img.icons8.com/plasticine/100/000000/bot.png"
+            alt=""
+            width="70"
+          />
+          <div>
+            <h2>Movie Summary Bot</h2>
           </div>
-        </div>
+          <img
+            src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/ico_star.png"
+            alt=""
+          />
+        </header>
+        <ul id="chat" class="chat">
+          <li class="you">
+            <div class="entete">
+              <span class="status green"></span>
+              <h2>Movie Summary Bot</h2>
+              <h3></h3>
+            </div>
+            <div class="triangle"></div>
+            <div class="message">
+              Hi, welcome to Summary Bot! Go ahead and send me a Summary.
+            </div>
+          </li>
+        </ul>
+        <footer>
+          <form class="msger-inputarea" id="msger-inputarea">
+            <textarea
+              class="msger-input"
+              placeholder="Type your summary"
+            ></textarea>
+            <button type="submit" class="msger-send-btn">Send</button>
+            <!-- <a
+              href="#"
+              onclick="document.getElementById('msger-inputarea').submit()"
+              >Send</a
+            > -->
+          </form>
+        </footer>
       </main>
+    </div>
 
-      <form class="msger-inputarea">
-        <input
-          type="text"
-          class="msger-input"
-          id="textInput"
-          placeholder="Enter your message..."
-        />
-        <button type="submit" class="msger-send-btn">Send</button>
-      </form>
-    </section>
-    <!-- partial -->
-    <script src="https://use.fontawesome.com/releases/v5.0.13/js/all.js"></script>
     <script>
       const msgerForm = get(".msger-inputarea");
       const msgerInput = get(".msger-input");
-      const msgerChat = get(".msger-chat");
+      const msgerChat = get(".chat");
 
       // Icons made by Freepik from www.flaticon.com
-      const BOT_IMG = "https://image.flaticon.com/icons/svg/327/327779.svg";
+      const BOT_IMG = "https://img.icons8.com/dusk/64/000000/bot--v1.png";
       const PERSON_IMG = "https://image.flaticon.com/icons/svg/145/145867.svg";
-      const BOT_NAME = "    ChatBot";
-      const PERSON_NAME = "You";
+      const BOT_NAME = "   Summary Bot";
+      const PERSON_NAME = "me";
 
       msgerForm.addEventListener("submit", (event) => {
         event.preventDefault();
-
         const msgText = msgerInput.value;
         if (!msgText) return;
 
-        appendMessage(PERSON_NAME, PERSON_IMG, "right", msgText);
+        appendMessage(PERSON_NAME, PERSON_IMG, "me", msgText);
         msgerInput.value = "";
         botResponse(msgText);
       });
 
       function appendMessage(name, img, side, text) {
         //   Simple solution for small apps
-        const msgHTML = `
-            <div class="msg ${side}-msg">
-            <div class="msg-img" style="background-image: url(${img})"></div>
 
-            <div class="msg-bubble">
-                <div class="msg-info">
-                <div class="msg-info-name">${name}</div>
-                <div class="msg-info-time">${formatDate(new Date())}</div>
-                </div>
+        var li = document.createElement("li");
+        li.className = `${side}`;
 
-                <div class="msg-text">${text}</div>
-            </div>
-            </div>
-`;
+        var div1 = document.createElement("div");
+        div1.className = "entete";
 
-        msgerChat.insertAdjacentHTML("beforeend", msgHTML);
+        var h3 = document.createElement("h3");
+        h3.innerHTML = `     ${formatDate(new Date())}       `;
+
+        var h2 = document.createElement("h2");
+        h2.innerHTML = name;
+
+        var span = document.createElement("span");
+        span.className = "status blue";
+
+        var div2 = document.createElement("div");
+        div2.className = "triangle";
+
+        var div3 = document.createElement("div");
+        div3.className = "message";
+        div3.innerHTML = text;
+
+        li.appendChild(div1);
+        div1.appendChild(h3);
+        div1.appendChild(h2);
+        div1.appendChild(span);
+        li.appendChild(div2);
+        li.appendChild(div3);
+
+        document.querySelector("ul").appendChild(li);
+        // msgerChat.insertAdjacentHTML("beforeend", msgHTML);
         msgerChat.scrollTop += 500;
       }
 
@@ -105,7 +124,7 @@
           console.log(rawText);
           console.log(data);
           const msgText = data;
-          appendMessage(BOT_NAME, BOT_IMG, "left", msgText);
+          appendMessage(BOT_NAME, BOT_IMG, "you", msgText);
         });
       }
 
