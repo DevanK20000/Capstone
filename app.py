@@ -23,7 +23,7 @@ def get_responce_from_model_server(msg):
         {"signature_name": "serving_default", "instances": [msg]})
     headers = {"content-type": "application/json"}
     json_response = requests.post(
-        'tenorflow_url', data=data, headers=headers)
+        tenorflow_url, data=data, headers=headers)
     predictions = json.loads(json_response.text)['predictions']
     return predictions
 
